@@ -20,4 +20,7 @@ public class ProductService {
     public Product save(Product p){
         return productRepository.save(p);
     }
+    public Product getById(Integer id){
+        return productRepository.getById(id);
+    }
 }

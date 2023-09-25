@@ -5,6 +5,8 @@
     <title>Electronicos LittleBlackBerry - Lector de QR</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script src="easy.qrcode.min.js"></script>
 
     <style>
@@ -115,6 +117,9 @@
     </style>
 </head>
 <body>
+<div>
+    <video id="scanner-container"></video>
+</div>
 <header>
     <img src="emblema.jpg" alt="Insignia de la Ferretería" class="logo">
     <h1>Electronicos LittleBlackBerry</h1>
@@ -127,45 +132,48 @@
 </footer>
 
 <main>
-    <h2>Contenido del código QR:</h2>
-    <table id="product-table">
+    <h2>Información de Códigos QR</h2>
+    <table id="qr-list">
         <tr>
             <th>Nombre del Producto</th>
             <th>Descripción</th>
             <th>Precio</th>
         </tr>
     </table>
+
+    <button onclick="goToIndex()">Volver al Inicio</button>
 </main>
 
 <script>
-    console.log("Script is running")
-    // Función para borrar los datos del almacenamiento local
-    function clearLocalStorage() {
-        localStorage.clear();
-        console.log('Local storage cleared');
+    function initQRScanner() {
+        let scanner = new Instascan.Scanner({ video: document.getElementById('scanner-container') });
+
+        scanner.addListener('scan', function (content) {
+            //alert("Código detectado: " + content);
+            let a = JSON.parse(content);
+            alert(a.id);
+        });
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]); // Usar la primera cámara encontrada
+            } else {
+                console.error("No se encontraron cámaras disponibles.");
+            }
+        }).catch(function (e) {
+            console.error(e);
+        });
     }
-            // Borra los datos del almacenamiento local
-            //clearLocalStorage();
 
-    // Obtiene los nuevos datos del servidor y los agrega al elemento
-    getNewData();
+    window.onload = initQRScanner;
+</script>
 
-    // Obtener el contenido del código QR del almacenamiento local
-    for (let i = 0; i < localStorage.length; i++) {
-        let productId = localStorage.key(i);
-        let product = JSON.parse(localStorage.getItem(productId));
-        console.log('Product from local storage:', product);
+<script>
 
-        // Mostrar los detalles del producto
-        let productHTML = `
-        <tr>
-            <td>${product.name}</td><br>
-            <td>${product.description}</td>
-            <td>$${product.price}</td>
-        </tr>
-    `;
-        document.getElementById('product-table').innerHTML += productHTML;
+    function goToIndex() {
+        window.location.href = "index.html";
     }
+
 </script>
 
 </body>
