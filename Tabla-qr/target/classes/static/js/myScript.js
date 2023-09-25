@@ -67,6 +67,12 @@ function displayProduct(productId, product) {
     });
 }
 
+// Función para borrar los datos del almacenamiento local
+function clearLocalStorage() {
+    localStorage.clear();
+    console.log('Local storage cleared');
+}
+
 
 function initQRScanner() {
     // Configuración de Quagga

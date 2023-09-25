@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Electronicos LittleBlackBerry - Lector de QR</title>
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script src="easy.qrcode.min.js"></script>
@@ -128,6 +127,13 @@
 </footer>
 
 <script>
+    console.log("Script is running")
+    // Función para borrar los datos del almacenamiento local
+    function clearLocalStorage() {
+        localStorage.clear();
+        console.log('Local storage cleared');
+    }
+
     document.addEventListener('DOMContentLoaded', (event) => {
         // Obtener el contenido del código QR del almacenamiento local
         for (let i = 0; i < localStorage.length; i++) {
@@ -145,6 +151,10 @@
             document.getElementById('product-table').innerHTML += productHTML;
         }
     });
+
+    function goToIndex() {
+        window.location.href = "index.html";
+    }
 </script>
 
 <main>
@@ -156,6 +166,7 @@
             <th>Precio</th>
         </tr>
     </table>
+    <button onclick="goToIndex()">Volver a Inicio</button>
 </main>
 
 </body>
