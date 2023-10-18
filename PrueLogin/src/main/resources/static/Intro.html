@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Electronicos LittleBlackBerry - Productos</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <script src="easy.qrcode.min.js"></script>
+  <style>
+    /* Establece un alto mínimo para el contenido de la página */
+    main {
+      min-height: calc(100vh - 150px);
+    }
+
+    /* Establece un desplazamiento vertical */
+    body {
+      overflow-y: scroll;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 30px 0;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .logo {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      max-height: 100px;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    main h2 {
+      color: #333;
+    }
+
+    input, button {
+      margin-bottom: 10px;
+      padding: 10px;
+      width: calc(100% - 22px);
+    }
+
+    input {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    #resultados {
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #333;
+      color: #fff;
+      padding: 2px 0;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+
+    #product-list {
+      margin-top: 20px;
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #product-list li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    #product-list .product-details {
+      flex: 1;
+    }
+
+    #product-list .product-qr {
+      margin-left: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="emblema.jpg" alt="Insignia de la Ferretería" class="logo">
+  <h1>Electronicos LittleBlackBerry</h1>
+  <p>Tu solución para herramientas y materiales de construcción</p>
+</header>
+
+<main>
+  <h2>Nuestros Productos</h2>
+  <div>
+    <input placeholder="Nombre del Producto" id="product-name">
+    <input placeholder="Descripcion" id="product-desc">
+    <input placeholder="Precio" id="product-price">
+    <br>
+    <button onclick="saveProduct()">Agregar Producto</button>
+    <button class="back-button" onclick="goToIndex()">Regresar a Inicio</button>
+  </div>
+  <div id="resultados"></div>
+
+  <!-- Agregar un elemento div con id "qrcode" para mostrar el código QR -->
+  <div id="qrcode-container">
+    <h2>Código QR del Producto</h2>
+    <div id="qrcode"></div>
+  </div>
+  <ul id="product-list"></ul>
+</main>
+
+<footer>
+  <p>&copy; 2023 Electronicos LittleBlackBerry. Todos los derechos reservados.</p>
+</footer>
+
+<script type="application/javascript" src="js/myScript.js"></script>
+
+<script>
+  function goToIndex() {
+    window.location.href = "index.html";
+  }
+
+  function displayProduct(product) {
+    let productHTML = `
+        <li>
+          <div class="product-details">
+            <strong>${product.name}</strong><br>
+            Descripción: ${product.description}<br>
+            Precio: $${product.price}
+          </div>
+          <div class="product-qr">
+            <div id="qr-code-${product.id}"></div>
+          </div>
+        </li>
+      `;
+    $("#product-list").append(productHTML);
+
+    // Generar QR con easy.qrcode.js
+    var qrcode = new QRCode(document.getElementById(`qr-code-${product.id}`), {
+      text: JSON.stringify(product),
+      width: 150,  // Ajusta el tamaño según sea necesario
+      height: 150, // Ajusta el tamaño según sea necesario
+      logo: "emblema.jpg",
+      colorDark : "#0000DD",
+      logoBackgroundTransparent: false,
+    });
+  }
+
+</script>
+</body>
+</html>
