@@ -67,7 +67,6 @@ function displayProduct(productId, product) {
     });
 }
 
-
 function initQRScanner() {
     // Configuración de Quagga
     // (Debes asegurarte de que la biblioteca QuaggaJS esté incluida en tu proyecto)
@@ -90,7 +89,32 @@ function initQRScanner() {
     Quagga.start();
 
     Quagga.onDetected(function(result) {
+        let qrCodeData = result.codeResult.code;
+        saveQRCodeData(qrCodeData);
         alert("Código detectado: " + result.codeResult.code);
+
+    });
+}
+
+function saveQRCodeData(qrCodeData) {
+    // Enviar el código QR detectado al servidor para guardarlo en la base de datos
+    let data = {
+        content: qrCodeData
+    };
+
+    $.ajax({
+        dataType: 'json',
+        data: JSON.stringify(data),
+        url: "api/qr/save",
+        type: 'POST',
+        contentType: 'application/json',
+        success: function(response) {
+            console.log("Código QR guardado exitosamente en la base de datos.");
+            window.location.href = "leerqr.html";
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error al guardar el código QR en la base de datos.");
+        }
     });
 }
 
@@ -128,11 +152,6 @@ function getProducts(){
     });
 }*/
 
-
-
-function goToIndex() {
-    window.location.href = "index.html";
-}
 
 
 
