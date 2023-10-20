@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BDatos</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Fondo más claro */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        main h2 {
+            color: #333;
+        }
+
+        button {
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff; /* Azul brillante */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
+        }
+
+        footer {
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .badge-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Bienvenido a LittleBlackBerry</h1>
+    <p>Tu solución para herramientas y materiales de circuitos</p>
+</header>
+
+<main>
+    <h2>Productos Almacenados</h2>
+    <table id="product-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="product-list">
+        <!-- Las filas de productos se añadirán aquí -->
+        </tbody>
+    </table>
+</main>
+
+<main>
+    <script>
+        function editProduct(productId) {
+            let product = JSON.parse(localStorage.getItem(productId));
+            $("#edit-product-name").val(product.name);
+            $("#edit-product-desc").val(product.description);
+            $("#edit-product-price").val(product.price);
+            $("#edit-product-id").val(productId);
+            $("#edit-product-modal").show();
+        }
+
+        function deleteProduct(productId) {
+            if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+                localStorage.removeItem(productId);
+                $("#product-row-" + productId).remove();
+            }
+        }
+
+        function updateProduct() {
+            let productId = $("#edit-product-id").val();
+            let newName = $("#edit-product-name").val();
+            let newDesc = $("#edit-product-desc").val();
+            let newPrice = $("#edit-product-price").val();
+
+            let updatedProduct = {
+                id: productId,
+                name: newName,
+                description: newDesc,
+                price: newPrice
+            };
+
+            localStorage.setItem(productId, JSON.stringify(updatedProduct));
+
+            // Actualizar la fila de la tabla con los nuevos datos
+            let productRow = $("#product-row-" + productId);
+            productRow.find(".product-name").text(newName);
+            productRow.find(".product-desc").text(newDesc);
+            productRow.find(".product-price").text("$" + newPrice);
+
+            $("#edit-product-modal").hide();
+        }
+    </script>
+
+    <!-- Modal de Edición de Producto -->
+    <div id="edit-product-modal" style="display:none;">
+        <h2>Editar Producto</h2>
+        <input type="hidden" id="edit-product-id">
+        <input placeholder="Nombre del Producto" id="edit-product-name">
+        <input placeholder="Descripcion" id="edit-product-desc">
+        <input placeholder="Precio" id="edit-product-price">
+        <br>
+        <button onclick="updateProduct()">Guardar Cambios</button>
+    </div>
+
+    <!-- Script para llenar la tabla con productos almacenados -->
+    <script>
+        $(document).ready(function(){
+            for (let i = 0; i < localStorage.length; i++) {
+                let productId = localStorage.key(i);
+                let product = JSON.parse(localStorage.getItem(productId));
+
+                let productHTML = `
+        <tr id="product-row-${productId}">
+          <td class="product-id">${productId}</td>
+          <td class="product-name">${product.name}</td>
+          <td class="product-desc">${product.description}</td>
+          <td class="product-price">$${product.price}</td>
+          <td>
+            <button onclick="editProduct(${productId})">Editar</button>
+            <button onclick="deleteProduct(${productId})">Eliminar</button>
+          </td>
+        </tr>
+      `;
+
+                $("#product-list").append(productHTML);
+            }
+        });
+    </script>
+
+    <button onclick="goToIndex()">Volver al Inicio</button>
+</main>
+
+<footer>
+    <p>&copy; 2023 Electronica LittleBlackBerry. Todos los derechos reservados.</p>
+</footer>
+
+<script type="application/javascript" src="js/myScript.js"></script>
+
+<script>
+    function goToIndex() {
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>
