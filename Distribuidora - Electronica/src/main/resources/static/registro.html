@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+  <script src="js/myScript.js"></script>
+  <meta charset="UTF-8">
+  <title>Registro - Mi App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .registration-container {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 100%;
+    }
+    .registration-container h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #ddd;
+    }
+    .registration-container label {
+      display: block;
+      margin-bottom: 8px;
+      color: #bbb;
+    }
+    .registration-container input[type="text"],
+    .registration-container input[type="email"],
+    .registration-container input[type="password"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background-color: #333;
+      color: #ddd;
+      box-sizing: border-box;
+    }
+    .registration-container input[type="submit"] {
+      background-color: #1877f2;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+    .registration-container input[type="submit"]:hover {
+      background-color: #0e5a94;
+    }
+  </style>
+</head>
+<body>
+
+<div class="registration-container">
+  <h2>Regístrese</h2>
+  <form id="infoForm">
+
+    <label for="firstName">Primer nombre:</label>
+    <input type="text" id="firstname" name="firstname" required>
+
+    <label for="lastName">Segundo nombre:</label>
+    <input type="text" id="lastname" name="lastname">
+
+    <label for="email">Correo electrónico:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" name="password" required>
+
+    <input type="button" value="Registrarse" onclick="registerData()">
+  </form>
+</div>
+
+</body>
+</html>

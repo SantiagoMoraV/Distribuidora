@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Electronicos LittleBlackBerry - Productos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+</head>
+<body>
+
+<main>
+  <h2>Productos Almacenados</h2>
+  <table id="product-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody id="product-list">
+    <!-- Las filas de productos se añadirán aquí -->
+    </tbody>
+  </table>
+</main>
+
+<script>
+  $(document).ready(function(){
+    $.ajax({
+      url: "/api/v1/productos",
+      type: "GET",
+      headers: {
+        "Authorization": "Bearer " + Cookies.get('token')
+      },
+      success: function (response) {
+        for (let i = 0; i < response.length; i++) {
+          let product = response[i];
+
+          let productHTML = `
+            <tr id="product-row-${product.id}">
+              <td class="product-id">${product.id}</td>
+              <td class="product-name">${product.nombre}</td>
+              <td class="product-desc">${product.descripcion}</td>
+              <td class="product-price">$${product.precio}</td>
+              <td>
+                <button onclick="editProduct(${product.id})">Editar</button>
+                <button onclick="deleteProduct(${product.id})">Eliminar</button>
+              </td>
+            </tr>
+          `;
+
+          $("#product-list").append(productHTML);
+        }
+      },
+      error: function (xhr, status) {
+        console.error('Error en la solicitud:', status);
+        alert('Disculpe, existió un problema');
+      }
+    });
+  });
+
+  function editProduct(productId) {
+    $.ajax({
+      url: `/api/v1/productos/${productId}`,
+      type: "GET",
+      headers: {
+        "Authorization": "Bearer " + Cookies.get('token')
+      },
+      success: function (product) {
+        $("#edit-product-id").val(product.id);
+        $("#edit-product-name").val(product.nombre);
+        $("#edit-product-desc").val(product.descripcion);
+        $("#edit-product-price").val(product.precio);
+        $("#edit-product-modal").show();
+      },
+      error: function (xhr, status) {
+        console.error('Error en la solicitud:', status);
+        alert('Disculpe, existió un problema');
+      }
+    });
+  }
+
+  function deleteProduct(productId) {
+    if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+      $.ajax({
+        url: `/api/v1/productos/${productId}`,
+        type: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + Cookies.get('token')
+        },
+        success: function () {
+          $("#product-row-" + productId).remove();
+        },
+        error: function (xhr, status) {
+          console.error('Error en la solicitud:', status);
+          alert('Disculpe, existió un problema');
+        }
+      });
+    }
+  }
+
+  function updateProduct() {
+    let productId = $("#edit-product-id").val();
+    let newName = $("#edit-product-name").val();
+    let newDesc = $("#edit-product-desc").val();
+    let newPrice = $("#edit-product-price").val();
+
+    let updatedProduct = {
+      id: productId,
+      nombre: newName,
+      descripcion: newDesc,
+      precio: newPrice
+    };
+
+    $.ajax({
+      url: `/api/v1/productos/${productId}`,
+      type: "PUT",
+      headers: {
+        "Authorization": "Bearer " + Cookies.get('token')
+      },
+      contentType: "application/json",
+      data: JSON.stringify(updatedProduct),
+      success: function () {
+        // Actualizar la fila de la tabla con los nuevos datos
+        let productRow = $("#product-row-" + productId);
+        productRow.find(".product-name").text(newName);
+        productRow.find(".product-desc").text(newDesc);
+        productRow.find(".product-price").text("$" + newPrice);
+
+        $("#edit-product-modal").hide();
+      },
+      error: function (xhr, status) {
+        console.error('Error en la solicitud:', status);
+        alert('Disculpe, existió un problema');
+      }
+    });
+  }
+</script>
+
+<!-- Modal de Edición de Producto -->
+<div id="edit-product-modal" style="display:none;">
+  <h2>Editar Producto</h2>
+  <input type="hidden" id="edit-product-id">
+  <input placeholder="Nombre del Producto" id="edit-product-name">
+  <input placeholder="Descripcion" id="edit-product-desc">
+  <input placeholder="Precio" id="edit-product-price">
+  <br>
+  <button onclick="updateProduct()">Guardar Cambios</button>
+</div>
+
+</body>
+</html>

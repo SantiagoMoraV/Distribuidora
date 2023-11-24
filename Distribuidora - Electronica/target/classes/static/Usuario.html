@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil de Usuario</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 30px 0;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #userProfile {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    #userProfile img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    #userProfile p {
+      margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label.upload-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Bienvenido a tu perfil</h1>
+  <p>Esta es tu página personal</p>
+</header>
+
+<main>
+    <h2>Información Personal</h2>
+    <p><strong>Nombre:</strong> <span id="userName"></span></p>
+    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    <input type="button" value="Volver al Inicio" onclick="redirectToIndex()">
+  </div>
+</main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+<script src="js/myScript.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/v1/auth/current", // Update the endpoint to fetch current user details
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + Cookies.get('token')
+            },
+            success: function (userData) {
+                $("#userName").text(userData.firstname + " " + userData.lastname);
+                $("#userEmail").text(userData.email);
+                // Update other fields with user data as needed
+            },
+            error: function (xhr, status) {
+                console.error('Error en la solicitud:', status);
+                alert('Disculpe, existió un problema al obtener la información del usuario');
+            }
+        });
+    });
+    function redirectToIndex() {
+        window.location.href = "index.html"; // Reemplaza con tu ruta correcta al index.html
+    }
+</script>
+
+</body>
+</html>

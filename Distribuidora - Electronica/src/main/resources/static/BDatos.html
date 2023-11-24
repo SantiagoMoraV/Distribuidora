@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BDatos</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+    <script src="js/myScript.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Fondo más claro */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        main h2 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        button {
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff; /* Azul brillante */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
+        }
+
+        footer {
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Bienvenido a LittleBlackBerry</h1>
+    <p>Tu solución para herramientas y materiales de circuitos</p>
+</header>
+
+<main>
+    <h2>Productos Almacenados</h2>
+    <table id="product-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="product-list">
+        <!-- Las filas de productos se añadirán aquí -->
+        </tbody>
+    </table>
+</main>
+
+<main>
+    <script>
+        function editProduct(productId) {
+            $.ajax({
+                url: `/api/product/${productId}`,
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer " + Cookies.get('token')
+                },
+                success: function (product) {
+                    $("#edit-product-id").val(product.id);
+                    $("#edit-product-name").val(product.nombre);
+                    $("#edit-product-desc").val(product.descripcion);
+                    $("#edit-product-price").val(product.precio);
+                    $("#edit-product-modal").show();
+                },
+                error: function (xhr, status) {
+                    console.error('Error en la solicitud:', status);
+                    alert('Disculpe, existió un problema');
+                }
+            });
+        }
+
+        function deleteProduct(productId) {
+            if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+                $.ajax({
+                    url: `/api/product/${productId}`,
+                    type: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + Cookies.get('token')
+                    },
+                    success: function () {
+                        $("#product-row-" + productId).remove();
+                    },
+                    error: function (xhr, status) {
+                        console.error('Error en la solicitud:', status);
+                        alert('Disculpe, existió un problema');
+                    }
+                });
+            }
+        }
+
+        function updateProduct() {
+            let productId = $("#edit-product-id").val();
+            let newName = $("#edit-product-name").val();
+            let newDesc = $("#edit-product-desc").val();
+            let newPrice = $("#edit-product-price").val();
+
+            let updatedProduct = {
+                id: productId,
+                nombre: newName,
+                descripcion: newDesc,
+                precio: newPrice
+            };
+
+            $.ajax({
+                url: `/api/product/up/${productId}`,
+                type: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + Cookies.get('token')
+                },
+                contentType: "application/json",
+                data: JSON.stringify(updatedProduct),
+                success: function () {
+                    // Actualizar la fila de la tabla con los nuevos datos
+                    let productRow = $("#product-row-" + productId);
+                    productRow.find(".product-name").text(newName);
+                    productRow.find(".product-desc").text(newDesc);
+                    productRow.find(".product-price").text("$" + newPrice);
+
+                    $("#edit-product-modal").hide();
+                },
+                error: function (xhr, status) {
+                    console.error('Error en la solicitud:', status);
+                    alert('Disculpe, existió un problema');
+                }
+            });
+        }
+        function getProductsFromServer() {
+            $.ajax({
+                url: "/api/product/all",
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer " + Cookies.get('token')
+                },
+                success: function (response) {
+                    // Limpiar la tabla antes de agregar nuevos productos
+                    $("#product-list").empty();
+
+                    for (let i = 0; i < response.length; i++) {
+                        let product = response[i];
+
+                        let productHTML = `
+                            <tr id="product-row-${product.id}">
+                                <td class="product-id">${product.id}</td>
+                                <td class="product-name">${product.name}</td>
+                                <td class="product-desc">${product.description}</td>
+                                <td class="product-price">$${product.price}</td>
+                                <td>
+                                    <button onclick="editProduct(${product.id})">Editar</button>
+                                    <button onclick="deleteProduct(${product.id})">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+
+                        $("#product-list").append(productHTML);
+                    }
+                },
+                error: function (xhr, status) {
+                    console.error('Error en la solicitud:', status);
+                    alert('Disculpe, existió un problema al obtener la lista de productos');
+                }
+            });
+        }
+
+        // Llama a la función para obtener productos al cargar la página
+        $(document).ready(function () {
+            getProductsFromServer();
+        });
+    </script>
+
+    <button onclick="goToIndex()">Volver al Inicio</button>
+</main>
+<div id="edit-product-modal" style="display:none;">
+    <h2>Editar Producto</h2>
+    <input type="hidden" id="edit-product-id">
+    <input placeholder="Nombre del Producto" id="edit-product-name">
+    <input placeholder="Descripcion" id="edit-product-desc">
+    <input placeholder="Precio" id="edit-product-price">
+    <br>
+    <button onclick="updateProduct()">Guardar Cambios</button>
+</div>
+<footer>
+    <p>&copy; 2023 Electronica LittleBlackBerry. Todos los derechos reservados.</p>
+</footer>
+
+<script type="application/javascript" src="js/myScript.js"></script>
+
+<script>
+    function goToIndex() {
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>
