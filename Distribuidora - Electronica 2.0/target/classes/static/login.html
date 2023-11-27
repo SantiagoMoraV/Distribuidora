@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+    <script src="js/myScript.js"></script>
+</head>
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Inicio de Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #18191a;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #242526;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%; /* Ajusta el ancho del contenedor */
+            max-width: 400px; /* Limita el ancho máximo */
+            margin-top: 50px; /* Ajusta el margen superior */
+            box-sizing: border-box; /* Incluye el padding y el borde en el ancho */
+        }
+
+        .login-container h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-container label {
+            color: #c8cbcf;
+        }
+
+        .login-container input[type="text"],
+        .login-container input[type="password"],
+        .login-container input[type="button"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #3a3b3c;
+            box-sizing: border-box;
+            background-color: #3a3b3c;
+            color: #fff;
+        }
+
+        .login-container input[type="button"] {
+            background-color: #1877f2;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%; /* Ocupa todo el ancho */
+        }
+
+        .login-container input[type="button"]:hover {
+            background-color: #0e5a94;
+        }
+
+        .login-container p {
+            color: #c8cbcf;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .login-container a {
+            color: #1877f2;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <form method="post">
+        <label for="username">Usuario:</label><br>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Contraseña:</label><br>
+        <input type="password" id="password" name="password" required><br>
+        <input type="button" value="Iniciar Sesión" onclick="loginData()">
+    </form>
+    <p>¿No tienes una cuenta? <a href="registro.html">Regístrate</a></p>
+    <div class="error-message" id="errorMessage" style="display: none;">El usuario no existe.</div>
+</div>
+</body>
+</html>
