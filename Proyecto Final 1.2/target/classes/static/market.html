@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/myScript.js"></script>
+    <title>MarketPlace</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .product {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            flex: 1 1 200px; /* Esto establece el tamaño máximo de cada producto */
+        }
+        img {
+            max-width: 100%;
+            max-height: 100px;
+        }
+        /* Establece un alto mínimo para el contenido de la página */
+        main {
+            min-height: calc(100vh - 150px);
+        }
+
+        /* Establece un desplazamiento vertical */
+        body {
+            overflow-y: scroll;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            max-height: 100px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        main h2 {
+            color: #333;
+        }
+
+        input, button {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: calc(100% - 22px);
+        }
+
+        input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #resultados {
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 2px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        #product-list {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #product-list li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        #product-list .product-details {
+            flex: 1;
+        }
+
+        #product-list .product-qr {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="qr-code-container"></div>
+
+<header>
+    <img src="emblema.jpg" alt="Insignia de la Ferretería" class="logo">
+    <h1>Electronicos LittleBlackBerry</h1>
+    <p>Tu solución para herramientas y materiales de construcción</p>
+</header>
+
+<main>
+    <h2>Productos en Venta</h2>
+
+    <div class="product-container" id="product-list">
+        <!-- Aquí se agregarán dinámicamente los productos -->
+    </div>
+
+    <h2>Agregar Nuevo Producto</h2>
+    <div>
+        <input type="text" id="product-name" placeholder="Nombre del producto">
+        <input type="text" id="product-desc" placeholder="Descripción">
+        <input type="number" id="product-price" placeholder="Precio">
+        <input type="file" id="product-image" accept=".jpg">
+        <button onclick="saveProduct()">Guardar Producto</button>
+    </div>
+
+    <button class="back-button" onclick="goToIndex()">Regresar a Inicio</button>
+</main>
+
+<footer>
+    <p>&copy; 2023 Mercado Online</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://rawgit.com/serratus/quaggaJS/master/dist/quagga.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Cargar productos almacenados al cargar la página
+        loadStoredProducts();
+    });
+</script>
+
+<script>
+    function goToIndex() {
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>

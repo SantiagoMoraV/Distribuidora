@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+    <script src="js/myScript.js"></script>
+</head>
+<head>
+    <meta charset="UTF-8">
+    <title>Electronicos LittleBlackBerry - Lector de QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script src="easy.qrcode.min.js"></script>
+
+    <style>
+        main {
+        max-width: 800px;
+        min-height: 100vh;
+        overflow-y: scroll;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        margin-top: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            max-height: 100px;
+        }
+
+        main h2 {
+            color: #333;
+        }
+
+        th {
+            padding: 8px;
+        }
+
+        input, button {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: calc(100% - 22px);
+        }
+
+        input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 2px 0;
+            /*position: fixed;*/
+            width: 100%;
+            bottom: 0;
+        }
+
+        #product-list li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        #product-list .product-qr {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="emblema.jpg" alt="Insignia de la Ferretería" class="logo">
+    <h1>Electronicos LittleBlackBerry</h1>
+    <p>Tu solución para herramientas y materiales de construcción</p>
+</header>
+
+
+<footer>
+    <p>© 2023 Electronicos LittleBlackBerry. Todos los derechos reservados.</p>
+</footer>
+
+<main>
+    <div >
+        <video id="scanner-container"></video>
+    </div>
+
+    <h2>Información de Códigos QR</h2>
+
+    <h3>ID</h3>
+    <ul id ='output' ></ul>
+
+    <h4>Contenido:</h4>
+    <ul id = 'content' ></ul>
+
+    <button onclick="goToIndex()">Volver al Inicio</button>
+</main>
+
+<script>
+    function initQRScanner() {
+        let scanner = new Instascan.Scanner({ video: document.getElementById('scanner-container') });
+
+        scanner.addListener('scan', function (content) {
+            let a = JSON.parse(content);
+            let outputElement = document.createElement('li');
+            outputElement.innerText = a.id;
+            document.getElementById('output').appendChild(outputElement);
+
+            let contentElement = document.createElement('li');
+            contentElement.innerText = content;
+            document.getElementById('content').appendChild(contentElement);
+            console.log("Impreso correctamente: ", content)
+        });
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]);
+            } else {
+                console.error("No se encontraron cámaras disponibles.");
+            }
+        }).catch(function (e) {
+            console.error(e);
+        });
+    }
+
+    window.onload = initQRScanner;
+</script>
+
+<script>
+
+    function goToIndex() {
+        window.location.href = "index.html";
+    }
+
+</script>
+
+</body>
+</html>
